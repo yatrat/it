@@ -1,0 +1,11 @@
+{
+  "cities": [
+    { "id": "shimla", "name": "Shimla" },
+    { "id": "manali", "name": "Manali" },
+    { "id": "dharamshala", "name": "Dharamshala" },
+    { "id": "mussoorie", "name": "Mussoorie" },
+    { "id": "nainital", "name": "Nainital" },
+    { "id": "rishikesh", "name": "Rishikesh" },
+    { "id": "haridwar", "name": "Haridwar" }
+  ]
+}
