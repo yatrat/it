@@ -10,8 +10,8 @@ const GITHUB_USER = 'yatrat';
 const GITHUB_REPO = 'it';
 const GITHUB_BRANCH = 'main';
 
-const CITY_LIST_URL = `https://cdn.jsdelivr.net/gh/yatrat/it@v2/data/citylist.json`;
-const ITINERARY_DATA_URL = `https://cdn.jsdelivr.net/gh/yatrat/it@v2/data/itinerary-data.json`;
+const CITY_LIST_URL = `https://cdn.jsdelivr.net/gh/yatrat/it@v2.1/data/citylist.json`;
+const ITINERARY_DATA_URL = `https://cdn.jsdelivr.net/gh/yatrat/it@v2.1/data/itinerary-data.json`;
 
 
 document.addEventListener('DOMContentLoaded', function() {
