@@ -1,0 +1,60 @@
+{
+  "cities": {
+    "shimla": {
+      "plans": {
+        "1": ["Arrival, Mall Road walk, Christ Church, Scandal Point"],
+        "2": ["Jakhoo Temple with Hanuman statue", "Kufri for horse riding and views"],
+        "3": ["Chadwick Falls visit", "Shimla State Museum"],
+        "4": ["Tara Devi Temple", "Shopping at Lakkar Bazaar"]
+      }
+    },
+    "manali": {
+      "plans": {
+        "1": ["Arrival, Mall Road exploration"],
+        "2": ["Hadimba Temple", "Old Manali cafes"],
+        "3": ["Solang Valley adventure sports", "Rohtang Pass (seasonal)"],
+        "4": ["Manu Temple", "Vashisht hot springs"]
+      }
+    },
+    "dharamshala": {
+      "plans": {
+        "1": ["Arrival, McLeod Ganj walk"],
+        "2": ["Dalai Lama Temple", "Bhagsu Nag waterfall"],
+        "3": ["Triund trek", "St. John in the Wilderness church"],
+        "4": ["Kangra Fort visit", "Local Tibetan food experience"]
+      }
+    },
+    "mussoorie": {
+      "plans": {
+        "1": ["Arrival, Mall Road walk"],
+        "2": ["Kempty Falls", "Gun Hill for sunset views"],
+        "3": ["Company Garden", "Camel's Back Road walk"],
+        "4": ["Lal Tibba for Himalayan views", "Shopping for local woolens"]
+      }
+    },
+    "nainital": {
+      "plans": {
+        "1": ["Arrival, Boat ride in Naini Lake"],
+        "2": ["Naina Devi Temple", "Snow View Point via cable car"],
+        "3": ["Eco Cave Gardens", "Tiffin Top (Dorothy's Seat)"],
+        "4": ["Bhimal Gari for views", "Shopping at Mall Road"]
+      }
+    },
+    "rishikesh": {
+      "plans": {
+        "1": ["Arrival, Lakshman Jhula walk"],
+        "2": ["River rafting in Ganges", "Triveni Ghat for evening Ganga Aarti"],
+        "3": ["Beatles Ashram visit", "Yoga session"],
+        "4": ["Neelkanth Mahadev Temple", "Local cafe hopping"]
+      }
+    },
+    "haridwar": {
+      "plans": {
+        "1": ["Arrival, Har Ki Pauri for Ganga Aarti"],
+        "2": ["Mansa Devi Temple via cable car", "Chandi Devi Temple"],
+        "3": ["Ganga Snan (holy dip)", "Local markets exploration"],
+        "4": ["Shanti Kunj ashram visit", "Rajaji National Park safari"]
+      }
+    }
+  }
+}
