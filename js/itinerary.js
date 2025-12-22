@@ -11,7 +11,7 @@ async function setupAutocomplete() {
 
   try {
     const res = await fetch(
-      "https://cdn.jsdelivr.net/gh/yatrat/it@v6/data/citylist.json"
+      "https://cdn.jsdelivr.net/gh/yatrat/it@v4/data/citylist.json"
     );
     const json = await res.json();
     cities = json.cities || [];
@@ -63,14 +63,13 @@ async function setupAutocomplete() {
 }
 
 /* -------- ITINERARY DATA -------- */
-
 let itineraryCache = null;
 
 async function loadItineraryData() {
   if (itineraryCache) return itineraryCache;
 
   const res = await fetch(
-    "https://cdn.jsdelivr.net/gh/yatrat/it@v6/data/itinerary-data.json"
+    "https://cdn.jsdelivr.net/gh/yatrat/it@v4/data/itinerary-data.json"
   );
 
   if (!res.ok) {
@@ -81,7 +80,9 @@ async function loadItineraryData() {
   return itineraryCache;
 }
 
-/* -------- GENERATE ITINERARY -------- */
+/* ===============================
+   GENERATE ITINERARY
+================================ */
 
 async function generateItinerary() {
   const cityInput = document.getElementById("cityInput");
@@ -89,7 +90,7 @@ async function generateItinerary() {
   const results = document.getElementById("itineraryResults");
 
   const cityId = cityInput.dataset.cityId;
-  const days = daysSelect.value;
+  const days = parseInt(daysSelect.value, 10);
 
   if (!cityId || !days) {
     results.innerHTML = `
@@ -103,34 +104,65 @@ async function generateItinerary() {
     const data = await loadItineraryData();
     const city = data.cities[cityId];
 
-    if (!city || !city.plans || !city.plans[days]) {
+    if (!city || !city.plans) {
       results.innerHTML = `
         <div class="message error">
-          Itinerary not available for selected city/days.
+          Itinerary not available for selected city.
         </div>`;
       return;
     }
 
     results.innerHTML = "";
 
-    city.plans[days].forEach((activity, index) => {
+    const availableDays = Object.keys(city.plans).length;
+    const daysToShow = Math.min(days, availableDays);
+
+    /* ---- SHOW DAY 1 → N ---- */
+    for (let d = 1; d <= daysToShow; d++) {
+      const activities = city.plans[d];
+      if (!activities) continue;
+
       const day = document.createElement("div");
       day.className = "itinerary-day";
 
-      day.innerHTML = `
-        <div class="day-header">
-          <span class="day-number">Day ${index + 1}</span>
-          <span class="day-duration">${days} Day Trip</span>
-        </div>
-        <ul class="day-activities">
-          <li>${activity}</li>
-        </ul>
-      `;
+      // Header
+      const header = document.createElement("div");
+      header.className = "day-header";
 
+      const dayNum = document.createElement("span");
+      dayNum.className = "day-number";
+      dayNum.textContent = `Day ${d}`;
+
+      const duration = document.createElement("span");
+      duration.className = "day-duration";
+      duration.textContent = `${days} Day Trip`;
+
+      header.appendChild(dayNum);
+      header.appendChild(duration);
+
+      // Activities
+      const ul = document.createElement("ul");
+      ul.className = "day-activities";
+
+      activities.forEach(activity => {
+        const li = document.createElement("li");
+        li.textContent = activity;
+        ul.appendChild(li);
+      });
+
+      day.appendChild(header);
+      day.appendChild(ul);
       results.appendChild(day);
-    });
+    }
+
+    /* ---- EXTRA DAYS FOOTER ---- */
+    const missingDays = days - availableDays;
+    if (missingDays > 0) {
+      addTipsFooter(missingDays);
+    }
 
   } catch (err) {
+    console.error(err);
     results.innerHTML = `
       <div class="message error">
         Error loading itinerary. Please try again.
@@ -138,7 +170,32 @@ async function generateItinerary() {
   }
 }
 
-/* -------- INIT -------- */
+/* ===============================
+   EXTRA DAYS FOOTER
+================================ */
+
+function addTipsFooter(missingDays) {
+  const results = document.getElementById("itineraryResults");
+
+  const footer = document.createElement("div");
+  footer.className = "itinerary-footer";
+
+  footer.innerHTML = `
+    <p><strong>Travel Tips:</strong> Use the remaining ${missingDays} day(s) for:</p>
+    <ul>
+      <li>Free exploration of local markets</li>
+      <li>Relaxation and rest</li>
+      <li>Spontaneous discoveries</li>
+      <li>Travel buffer time</li>
+    </ul>
+  `;
+
+  results.appendChild(footer);
+}
+
+/* ===============================
+   INIT
+================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
   setupAutocomplete();
