@@ -9,7 +9,7 @@ async function setupAutocomplete() {
 
   try {
     const res = await fetch(
-      "https://cdn.jsdelivr.net/gh/Yatrat/it@v3.9/data/citylist.json"
+      "https://cdn.jsdelivr.net/gh/Yatrat/it@v3.1.1/data/citylist.json"
     );
     const json = await res.json();
     cities = json.cities || [];
@@ -65,7 +65,7 @@ async function loadItineraryData() {
   if (itineraryCache) return itineraryCache;
 
   const res = await fetch(
-    "https://cdn.jsdelivr.net/gh/Yatrat/it@v3.9/data/itinerary-data.json"
+    "https://cdn.jsdelivr.net/gh/Yatrat/it@v3.1.1/data/itinerary-data.json"
   );
 
   if (!res.ok) {
