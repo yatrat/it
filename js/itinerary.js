@@ -2,8 +2,8 @@
 'use strict';
 const C={
     urls:{
-        cities:'https://cdn.jsdelivr.net/gh/yatrat/it@v3/data/citylist.json',
-        itineraries:'https://cdn.jsdelivr.net/gh/yatrat/it@v3/data/itinerary-data.json'
+        cities:'https://cdn.jsdelivr.net/gh/yatrat/it@v3.5/data/citylist.json',
+        itineraries:'https://cdn.jsdelivr.net/gh/yatrat/it@v3.5/data/itinerary-data.json'
     },
     selectors:{
         cityInput:'cityInput',cityList:'cityList',daysSelect:'daysSelect',
@@ -141,8 +141,7 @@ const M={
         
         try{
             sessionStorage.setItem(`cache_${btoa(url)}`,JSON.stringify(data));
-        }catch(e)
-        
+        }catch(e){}
         return data;
     },
     
