@@ -1,31 +1,19 @@
-
 const cityInput = document.getElementById('cityInput');
 const cityList = document.getElementById('cityList');
 const daysSelect = document.getElementById('daysSelect');
 const generateBtn = document.getElementById('generateBtn');
 const itineraryResults = document.getElementById('itineraryResults');
-
-
 const GITHUB_USER = 'yatrat';
 const GITHUB_REPO = 'it';
 const GITHUB_BRANCH = 'main';
-
-const CITY_LIST_URL = `https://cdn.jsdelivr.net/gh/yatrat/it@v2.1/data/citylist.json`;
-const ITINERARY_DATA_URL = `https://cdn.jsdelivr.net/gh/yatrat/it@v2.1/data/itinerary-data.json`;
-
-
+const CITY_LIST_URL = `https://cdn.jsdelivr.net/gh/yatrat/it@v2.2/data/citylist.json`;
+const ITINERARY_DATA_URL = `https://cdn.jsdelivr.net/gh/yatrat/it@v2.2/data/itinerary-data.json`;
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Travel Itinerary Tool Loaded');
-    
-    // Setup autocomplete
     initializeAutocomplete();
-    
-    // Setup generate button
     if (generateBtn) {
         generateBtn.addEventListener('click', generateItinerary);
     }
-    
-    // Enter key support
     if (cityInput) {
         cityInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -34,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 async function initializeAutocomplete() {
     if (!cityInput || !cityList) return;
     
@@ -83,8 +70,6 @@ async function initializeAutocomplete() {
                 cityList.style.display = 'block';
             }
         });
-        
-        // Hide suggestions on outside click
         document.addEventListener('click', (e) => {
             if (!cityList.contains(e.target) && e.target !== cityInput) {
                 cityList.style.display = 'none';
@@ -112,41 +97,42 @@ async function generateItinerary() {
     
     const cityName = cityInput.value.trim();
     const cityId = cityInput.dataset.cityId || cityName.toLowerCase();
-    const days = daysSelect.value;
+    const selectedDays = parseInt(daysSelect.value);
     
-    if (!cityName || !days) {
+    if (!cityName || !selectedDays) {
         showMessage('Please select both city and number of days', 'error');
         return;
     }
-    
-    // Show loading
     if (generateBtn) {
         generateBtn.innerHTML = 'Loading...';
         generateBtn.disabled = true;
     }
-    
     try {
         const data = await loadItineraryData();
         
         if (!data.cities || !data.cities[cityId]) {
             showMessage(`Itinerary not available for ${cityName}`, 'error');
             return;
-        }
-        
+        } 
         const cityData = data.cities[cityId];
-        
-        if (!cityData.plans || !cityData.plans[days]) {
-            showMessage(`${days}-day itinerary not available for ${cityName}`, 'error');
+        let plan = null;
+        if (cityData.plans && cityData.plans[selectedDays]) {
+            plan = cityData.plans[selectedDays];
+        } 
+        else if (cityData.plans && cityData.plans["4"]) {
+            plan = cityData.plans["4"].slice(0, selectedDays);
+        }
+        else {
+            showMessage(`${selectedDays}-day itinerary not available for ${cityName}`, 'error');
             return;
         }
         
-        displayItinerary(cityName, days, cityData.plans[days]);
+        displayItinerary(cityName, selectedDays, plan);
         
     } catch (error) {
         console.error('Error:', error);
         showMessage('Failed to generate itinerary', 'error');
     } finally {
-        // Reset button
         if (generateBtn) {
             generateBtn.innerHTML = 'Generate Itinerary';
             generateBtn.disabled = false;
@@ -154,7 +140,7 @@ async function generateItinerary() {
     }
 }
 
-function displayItinerary(cityName, days, plan) {
+function displayItinerary(cityName, selectedDays, plan) {
     if (!itineraryResults) return;
     
     itineraryResults.innerHTML = '';
@@ -162,33 +148,53 @@ function displayItinerary(cityName, days, plan) {
     const header = document.createElement('div');
     header.className = 'itinerary-header';
     header.innerHTML = `
-        <h3>${days}-Day Itinerary for ${cityName}</h3>
-        <p>${plan.length} days of curated experiences</p>
+        <h3>${selectedDays}-Day Itinerary for ${cityName}</h3>
+        <p>${selectedDays} days of curated experiences</p>
     `;
     itineraryResults.appendChild(header);
-    
-    plan.forEach((activities, index) => {
-        const dayNumber = index + 1;
+
+    const planLength = plan.length;
+
+    for (let dayNumber = 1; dayNumber <= selectedDays && dayNumber <= planLength; dayNumber++) {
         const dayCard = document.createElement('div');
         dayCard.className = 'itinerary-day';
+ 
+        const dayData = plan[dayNumber - 1];
         
         let activitiesHTML = '';
-        if (Array.isArray(activities)) {
-            activitiesHTML = activities.map(activity => `<li>${activity}</li>`).join('');
+        if (Array.isArray(dayData)) {
+            activitiesHTML = dayData.map(activity => `<li>${activity}</li>`).join('');
         } else {
-            activitiesHTML = `<li>${activities}</li>`;
+            activitiesHTML = `<li>${dayData}</li>`;
         }
         
         dayCard.innerHTML = `
             <div class="day-header">
-                <span>Day ${dayNumber}</span>
-                <span>Full Day</span>
+                <span class="day-number">Day ${dayNumber}</span>
+                <span class="day-duration">Full Day</span>
             </div>
-            <ul>${activitiesHTML}</ul>
+            <ul class="day-activities">${activitiesHTML}</ul>
         `;
         
         itineraryResults.appendChild(dayCard);
-    });
+    }
+    if (selectedDays > planLength) {
+        const extraDays = selectedDays - planLength;
+        const warning = document.createElement('div');
+        warning.className = 'itinerary-warning';
+        warning.innerHTML = `
+            <p><strong>Travel Tip:</strong> Detailed itinerary available for ${planLength} days. 
+            You can use the remaining ${extraDays} day(s) for:
+            <ul>
+                <li>Free exploration of local markets</li>
+                <li>Relaxation at your hotel/resort</li>
+                <li>Visiting nearby attractions</li>
+                <li>Travel buffer time</li>
+            </ul>
+            </p>
+        `;
+        itineraryResults.appendChild(warning);
+    }
 }
 
 function showMessage(text, type = 'error') {
