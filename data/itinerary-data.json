@@ -2,58 +2,1428 @@
   "cities": {
     "shimla": {
       "plans": {
-        "1": ["Arrival, Mall Road walk, Christ Church, Scandal Point"],
-        "2": ["Jakhoo Temple with Hanuman statue", "Kufri for horse riding and views"],
-        "3": ["Chadwick Falls visit", "Shimla State Museum"],
-        "4": ["Tara Devi Temple", "Shopping at Lakkar Bazaar"]
+        "1": [
+          "Arrival, Mall Road walk, Christ Church, Scandal Point"
+        ],
+        "2": [
+          "Jakhoo Temple with Hanuman statue",
+          "Kufri for horse riding and views"
+        ],
+        "3": [
+          "Chadwick Falls visit",
+          "Shimla State Museum"
+        ],
+        "4": [
+          "Tara Devi Temple",
+          "Shopping at Lakkar Bazaar"
+        ]
       }
     },
     "manali": {
       "plans": {
-        "1": ["Arrival, Mall Road exploration"],
-        "2": ["Hadimba Temple", "Old Manali cafes"],
-        "3": ["Solang Valley adventure sports", "Rohtang Pass (seasonal)"],
-        "4": ["Manu Temple", "Vashisht hot springs"]
+        "1": [
+          "Arrival, Mall Road walk, local cafes"
+        ],
+        "2": [
+          "Hadimba Temple",
+          "Old Manali exploration"
+        ],
+        "3": [
+          "Solang Valley",
+          "Atal Tunnel"
+        ],
+        "4": [
+          "Naggar Castle",
+          "River rafting or leisure time"
+        ]
       }
     },
     "dharamshala": {
       "plans": {
-        "1": ["Arrival, McLeod Ganj walk"],
-        "2": ["Dalai Lama Temple", "Bhagsu Nag waterfall"],
-        "3": ["Triund trek", "St. John in the Wilderness church"],
-        "4": ["Kangra Fort visit", "Local Tibetan food experience"]
+        "1": [
+          "Arrival, McLeod Ganj exploration"
+        ],
+        "2": [
+          "Tsuglagkhang Complex (Dalai Lama Temple)",
+          "Bhagsu Nag Temple and waterfall"
+        ],
+        "3": [
+          "Triund trek day trip",
+          "St. John in the Wilderness Church"
+        ],
+        "4": [
+          "Kangra Art Museum",
+          "Tibetan markets shopping"
+        ]
       }
     },
     "mussoorie": {
       "plans": {
-        "1": ["Arrival, Mall Road walk"],
-        "2": ["Kempty Falls", "Gun Hill for sunset views"],
-        "3": ["Company Garden", "Camel's Back Road walk"],
-        "4": ["Lal Tibba for Himalayan views", "Shopping for local woolens"]
+        "1": [
+          "Arrival, Mall Road walk"
+        ],
+        "2": [
+          "Kempty Falls",
+          "Gun Hill for sunset views"
+        ],
+        "3": [
+          "Company Garden",
+          "Camel's Back Road walk"
+        ],
+        "4": [
+          "Lal Tibba for Himalayan views",
+          "Shopping for local woolens"
+        ]
       }
     },
     "nainital": {
       "plans": {
-        "1": ["Arrival, Boat ride in Naini Lake"],
-        "2": ["Naina Devi Temple", "Snow View Point via cable car"],
-        "3": ["Eco Cave Gardens", "Tiffin Top (Dorothy's Seat)"],
-        "4": ["Bhimal Gari for views", "Shopping at Mall Road"]
+        "1": [
+          "Arrival, Boat ride in Naini Lake"
+        ],
+        "2": [
+          "Naina Devi Temple",
+          "Snow View Point via cable car"
+        ],
+        "3": [
+          "Eco Cave Gardens",
+          "Tiffin Top (Dorothy's Seat)"
+        ],
+        "4": [
+          "Bhimal Gari for views",
+          "Shopping at Mall Road"
+        ]
       }
     },
     "rishikesh": {
       "plans": {
-        "1": ["Arrival, Lakshman Jhula walk"],
-        "2": ["River rafting in Ganges", "Triveni Ghat for evening Ganga Aarti"],
-        "3": ["Beatles Ashram visit", "Yoga session"],
-        "4": ["Neelkanth Mahadev Temple", "Local cafe hopping"]
+        "1": [
+          "Arrival, Lakshman Jhula walk"
+        ],
+        "2": [
+          "River rafting in Ganges",
+          "Triveni Ghat for evening Ganga Aarti"
+        ],
+        "3": [
+          "Beatles Ashram visit",
+          "Yoga session"
+        ],
+        "4": [
+          "Neelkanth Mahadev Temple",
+          "Local cafe hopping"
+        ]
       }
     },
     "haridwar": {
       "plans": {
-        "1": ["Arrival, Har Ki Pauri for Ganga Aarti"],
-        "2": ["Mansa Devi Temple via cable car", "Chandi Devi Temple"],
-        "3": ["Ganga Snan (holy dip)", "Local markets exploration"],
-        "4": ["Shanti Kunj ashram visit", "Rajaji National Park safari"]
+        "1": [
+          "Arrival, Har Ki Pauri for Ganga Aarti"
+        ],
+        "2": [
+          "Mansa Devi Temple via cable car",
+          "Chandi Devi Temple"
+        ],
+        "3": [
+          "Ganga Snan (holy dip)",
+          "Local markets exploration"
+        ],
+        "4": [
+          "Shanti Kunj ashram visit",
+          "Rajaji National Park safari"
+        ]
+      }
+    },
+    "amritsar": {
+      "plans": {
+        "1": [
+          "Arrival, Golden Temple visit (day and night)"
+        ],
+        "2": [
+          "Jallianwala Bagh",
+          "Wagah Border ceremony"
+        ],
+        "3": [
+          "Partition Museum",
+          "Gobindgarh Fort"
+        ],
+        "4": [
+          "Local food tour (Amritsari kulcha, lassi)",
+          "Shopping at Hall Bazaar"
+        ]
+      }
+    },
+    "jaipur": {
+      "plans": {
+        "1": [
+          "Arrival, Hawa Mahal, City Palace"
+        ],
+        "2": [
+          "Amber Fort with elephant ride",
+          "Jal Mahal view"
+        ],
+        "3": [
+          "Jantar Mantar",
+          "Albert Hall Museum"
+        ],
+        "4": [
+          "Shopping at Johari Bazaar",
+          "Local Rajasthani dinner with cultural show"
+        ]
+      }
+    },
+    "udaipur": {
+      "plans": {
+        "1": [
+          "Arrival, Lake Pichola boat ride"
+        ],
+        "2": [
+          "City Palace tour",
+          "Jagdish Temple"
+        ],
+        "3": [
+          "Saheliyon ki Bari",
+          "Bagore ki Haveli with cultural show"
+        ],
+        "4": [
+          "Sajjangarh Monsoon Palace sunset",
+          "Shopping in old city"
+        ]
+      }
+    },
+    "jodhpur": {
+      "plans": {
+        "1": [
+          "Arrival, Mehrangarh Fort exploration"
+        ],
+        "2": [
+          "Jaswant Thada",
+          "Umaid Bhawan Palace"
+        ],
+        "3": [
+          "Old city blue houses walk",
+          "Clock Tower and Sardar Market"
+        ],
+        "4": [
+          "Mandore Gardens",
+          "Local Rajasthani food tasting"
+        ]
+      }
+    },
+    "jaisalmer": {
+      "plans": {
+        "1": [
+          "Arrival, Jaisalmer Fort exploration"
+        ],
+        "2": [
+          "Patwon ki Haveli",
+          "Salim Singh ki Haveli"
+        ],
+        "3": [
+          "Desert safari with camel ride",
+          "Overnight desert camp"
+        ],
+        "4": [
+          "Gadisar Lake",
+          "Local handicraft shopping"
+        ]
+      }
+    },
+    "agra": {
+      "plans": {
+        "1": [
+          "Arrival, Taj Mahal visit (sunrise)"
+        ],
+        "2": [
+          "Agra Fort exploration",
+          "Mehtab Bagh for Taj view"
+        ],
+        "3": [
+          "Fatehpur Sikri day trip",
+          "Itimad-ud-Daulah's Tomb"
+        ],
+        "4": [
+          "Local markets for marble souvenirs",
+          "Mughlai food experience"
+        ]
+      }
+    },
+    "varanasi": {
+      "plans": {
+        "1": [
+          "Arrival, Evening Ganga Aarti at Dashashwamedh Ghat"
+        ],
+        "2": [
+          "Morning boat ride on Ganges",
+          "Kashi Vishwanath Temple"
+        ],
+        "3": [
+          "Sarnath day trip",
+          "Bharat Mata Temple"
+        ],
+        "4": [
+          "Walk through old alleys",
+          "Local Banarasi silk shopping"
+        ]
+      }
+    },
+    "dehradun": {
+      "plans": {
+        "1": [
+          "Arrival, Forest Research Institute visit"
+        ],
+        "2": [
+          "Robber's Cave (Gucchupani)",
+          "Tapkeshwar Temple"
+        ],
+        "3": [
+          "Sahastradhara",
+          "Mindrolling Monastery"
+        ],
+        "4": [
+          "Local market for Basmati rice and tea",
+          "Rajaji National Park outskirts"
+        ]
+      }
+    },
+    "kullu": {
+      "plans": {
+        "1": [
+          "Arrival, Kullu Shawl shopping"
+        ],
+        "2": [
+          "Raghunath Temple",
+          "Bijli Mahadev Temple trek"
+        ],
+        "3": [
+          "River rafting in Beas River",
+          "Local apple orchard visit"
+        ],
+        "4": [
+          "Naggar Castle",
+          "Kullu Dussehra ground (if season)"
+        ]
+      }
+    },
+    "kasol": {
+      "plans": {
+        "1": [
+          "Arrival, Parvati riverside relaxation"
+        ],
+        "2": [
+          "Kheerganga trek day trip",
+          "Hot water springs"
+        ],
+        "3": [
+          "Malana village visit",
+          "Manikaran Sahib Gurudwara"
+        ],
+        "4": [
+          "Local Israeli food tasting",
+          "Café hopping in Kasol"
+        ]
+      }
+    },
+    "dalhousie": {
+      "plans": {
+        "1": [
+          "Arrival, Mall Road walk"
+        ],
+        "2": [
+          "Khajjiar visit (Mini Switzerland)",
+          "Kalatop Wildlife Sanctuary"
+        ],
+        "3": [
+          "St. Francis Church",
+          "Dainkund Peak trek"
+        ],
+        "4": [
+          "Panchpula waterfalls",
+          "Shopping for local handicrafts"
+        ]
+      }
+    },
+    "kasauli": {
+      "plans": {
+        "1": [
+          "Arrival, Mall Road evening walk"
+        ],
+        "2": [
+          "Monkey Point sunrise",
+          "Christ Church"
+        ],
+        "3": [
+          "Gilbert Trail nature walk",
+          "Sunset point"
+        ],
+        "4": [
+          "Baba Balak Nath Temple",
+          "Local bakery treats"
+        ]
+      }
+    },
+    "lansdowne": {
+      "plans": {
+        "1": [
+          "Arrival, Tip-n-Top viewpoint"
+        ],
+        "2": [
+          "Garhwali Mess museum",
+          "St. Mary's Church"
+        ],
+        "3": [
+          "Bhulla Lake boating",
+          "Tarkeshwar Mahadev Temple"
+        ],
+        "4": [
+          "Nature walks in pine forests",
+          "Local Garhwali food"
+        ]
+      }
+    },
+    "almora": {
+      "plans": {
+        "1": [
+          "Arrival, Bright End Corner sunset"
+        ],
+        "2": [
+          "Kasar Devi Temple",
+          "Nanda Devi Temple"
+        ],
+        "3": [
+          "Binsar Wildlife Sanctuary",
+          "Zero Point for Himalayan views"
+        ],
+        "4": [
+          "Local handicraft shopping",
+          "Copper ware market visit"
+        ]
+      }
+    },
+    "ranikhet": {
+      "plans": {
+        "1": [
+          "Arrival, Chaubatia Gardens"
+        ],
+        "2": [
+          "Jhula Devi Temple",
+          "Mankameshwar Temple"
+        ],
+        "3": [
+          "Golf Course visit",
+          "Bhalu Dam"
+        ],
+        "4": [
+          "Majhkhali village visit",
+          "Local fruit products shopping"
+        ]
+      }
+    },
+    "goa": {
+      "plans": {
+        "1": [
+          "Arrival, Calangute or Baga beach"
+        ],
+        "2": [
+          "Old Goa churches (Basilica of Bom Jesus)",
+          "Fontainhas Latin Quarter"
+        ],
+        "3": [
+          "Dudhsagar Falls day trip",
+          "Spice plantation visit"
+        ],
+        "4": [
+          "Anjuna flea market",
+          "Cruise on Mandovi River"
+        ]
+      }
+    },
+    "mysore": {
+      "plans": {
+        "1": [
+          "Arrival, Mysore Palace illumination"
+        ],
+        "2": [
+          "Chamundi Hill Temple",
+          "Brindavan Gardens light show"
+        ],
+        "3": [
+          "St. Philomena's Church",
+          "Mysore Zoo"
+        ],
+        "4": [
+          "Sandalwood and silk shopping",
+          "Local Mysore pak tasting"
+        ]
+      }
+    },
+    "pondicherry": {
+      "plans": {
+        "1": [
+          "Arrival, Promenade Beach walk"
+        ],
+        "2": [
+          "French Quarter exploration",
+          "Aurobindo Ashram"
+        ],
+        "3": [
+          "Auroville and Matrimandir",
+          "Paradise Beach"
+        ],
+        "4": [
+          "French cuisine experience",
+          "Shopping for handicrafts"
+        ]
+      }
+    },
+    "ooty": {
+      "plans": {
+        "1": [
+          "Arrival, Ooty Lake boating"
+        ],
+        "2": [
+          "Toy Train ride to Coonoor",
+          "Doddabetta Peak"
+        ],
+        "3": [
+          "Botanical Gardens",
+          "Rose Garden"
+        ],
+        "4": [
+          "Tea plantation visit",
+          "Local chocolate shopping"
+        ]
+      }
+    },
+    "kodaikanal": {
+      "plans": {
+        "1": [
+          "Arrival, Kodaikanal Lake boating"
+        ],
+        "2": [
+          "Coaker's Walk",
+          "Bryant Park"
+        ],
+        "3": [
+          "Pillar Rocks",
+          "Green Valley View"
+        ],
+        "4": [
+          "Bear Shola Falls",
+          "Local homemade chocolate shops"
+        ]
+      }
+    },
+    "coorg": {
+      "plans": {
+        "1": [
+          "Arrival, Raja's Seat sunset"
+        ],
+        "2": [
+          "Abbey Falls",
+          "Coffee plantation tour"
+        ],
+        "3": [
+          "Talakaveri",
+          "Bhagamandala"
+        ],
+        "4": [
+          "Dubare Elephant Camp",
+          "Local Coorgi cuisine"
+        ]
+      }
+    },
+    "munnar": {
+      "plans": {
+        "1": [
+          "Arrival, Tea Museum visit"
+        ],
+        "2": [
+          "Eravikulam National Park",
+          "Tea plantation walk"
+        ],
+        "3": [
+          "Mattupetty Dam",
+          "Echo Point"
+        ],
+        "4": [
+          "Top Station",
+          "Spice garden visit"
+        ]
+      }
+    },
+    "thekkady": {
+      "plans": {
+        "1": [
+          "Arrival, Periyar Lake evening cruise"
+        ],
+        "2": [
+          "Periyar Wildlife Sanctuary safari",
+          "Spice plantation tour"
+        ],
+        "3": [
+          "Kathakali performance",
+          "Elephant ride"
+        ],
+        "4": [
+          "Mangala Devi Temple",
+          "Bamboo rafting"
+        ]
+      }
+    },
+    "kanyakumari": {
+      "plans": {
+        "1": [
+          "Arrival, Vivekananda Rock Memorial"
+        ],
+        "2": [
+          "Sunrise and sunset viewing",
+          "Thiruvalluvar Statue"
+        ],
+        "3": [
+          "Padmanabhapuram Palace",
+          "Suchindram Temple"
+        ],
+        "4": [
+          "Local pearl and shell shopping",
+          "Beach relaxation"
+        ]
+      }
+    },
+    "mahabalipuram": {
+      "plans": {
+        "1": [
+          "Arrival, Shore Temple sunset"
+        ],
+        "2": [
+          "Pancha Rathas",
+          "Arjuna's Penance"
+        ],
+        "3": [
+          "Crocodile Bank",
+          "DakshinaChitra cultural museum"
+        ],
+        "4": [
+          "Beach relaxation",
+          "Stone sculpture shopping"
+        ]
+      }
+    },
+    "hampi": {
+      "plans": {
+        "1": [
+          "Arrival, Virupaksha Temple"
+        ],
+        "2": [
+          "Vittala Temple with stone chariot",
+          "Royal Enclosure"
+        ],
+        "3": [
+          "Sunrise at Matanga Hill",
+          "Lotus Mahal and Elephant Stables"
+        ],
+        "4": [
+          "Tungabhadra river coracle ride",
+          "Local markets"
+        ]
+      }
+    },
+    "gokarna": {
+      "plans": {
+        "1": [
+          "Arrival, Om Beach sunset"
+        ],
+        "2": [
+          "Mahadev Temple",
+          "Kudle Beach"
+        ],
+        "3": [
+          "Half Moon Beach trek",
+          "Paradise Beach"
+        ],
+        "4": [
+          "Yana Caves day trip",
+          "Beach shacks relaxation"
+        ]
+      }
+    },
+    "chikmagalur": {
+      "plans": {
+        "1": [
+          "Arrival, coffee estate stay"
+        ],
+        "2": [
+          "Mullayanagiri peak trek",
+          "Baba Budangiri"
+        ],
+        "3": [
+          "Hebbe Falls",
+          "Kemmangundi"
+        ],
+        "4": [
+          "Coffee tasting session",
+          "Local spice shopping"
+        ]
+      }
+    },
+    "wayanad": {
+      "plans": {
+        "1": [
+          "Arrival, Pookode Lake"
+        ],
+        "2": [
+          "Edakkal Caves trek",
+          "Chembra Peak"
+        ],
+        "3": [
+          "Banasura Sagar Dam",
+          "Soochipara Falls"
+        ],
+        "4": [
+          "Thirunelli Temple",
+          "Spice plantation visit"
+        ]
+      }
+    },
+    "araku-valley": {
+      "plans": {
+        "1": [
+          "Arrival, Tribal Museum visit"
+        ],
+        "2": [
+          "Borra Caves exploration",
+          "Katiki Waterfalls"
+        ],
+        "3": [
+          "Coffee plantation tour",
+          "Padmapuram Gardens"
+        ],
+        "4": [
+          "Local tribal village visit",
+          "Shopping for organic coffee"
+        ]
+      }
+    },
+    "yercaud": {
+      "plans": {
+        "1": [
+          "Arrival, Yercaud Lake boating"
+        ],
+        "2": [
+          "Pagoda Point sunrise",
+          "Killiyur Falls"
+        ],
+        "3": [
+          "Botanical Garden",
+          "Lady's Seat"
+        ],
+        "4": [
+          "Coffee and spice shopping",
+          "Orchidarium visit"
+        ]
+      }
+    },
+    "kumarakom": {
+      "plans": {
+        "1": [
+          "Arrival, backwater resort check-in"
+        ],
+        "2": [
+          "Houseboat cruise on Vembanad Lake",
+          "Bird watching"
+        ],
+        "3": [
+          "Pathiramanal Island visit",
+          "Traditional Kerala lunch"
+        ],
+        "4": [
+          "Coir making demonstration",
+          "Ayurvedic spa treatment"
+        ]
+      }
+    },
+    "mount-abu": {
+      "plans": {
+        "1": [
+          "Arrival, Nakki Lake evening"
+        ],
+        "2": [
+          "Dilwara Jain Temples",
+          "Guru Shikhar"
+        ],
+        "3": [
+          "Sunset Point",
+          "Brahmakumari's Peace Park"
+        ],
+        "4": [
+          "Achalgarh Fort",
+          "Local Rajasthani shopping"
+        ]
+      }
+    },
+    "saputara": {
+      "plans": {
+        "1": [
+          "Arrival, Saputara Lake"
+        ],
+        "2": [
+          "Sunrise Point",
+          "Artist Village"
+        ],
+        "3": [
+          "Step Garden",
+          "Rope Way cable car"
+        ],
+        "4": [
+          "Tribal Museum",
+          "Local tribal handicrafts"
+        ]
+      }
+    },
+    "matheran": {
+      "plans": {
+        "1": [
+          "Arrival, toy train ride"
+        ],
+        "2": [
+          "Charlotte Lake",
+          "Echo Point"
+        ],
+        "3": [
+          "Porcupine Point sunset",
+          "One Tree Hill"
+        ],
+        "4": [
+          "Local market for leather goods",
+          "Horse riding"
+        ]
+      }
+    },
+    "lonavala": {
+      "plans": {
+        "1": [
+          "Arrival, Bhushi Dam"
+        ],
+        "2": [
+          "Tiger's Leap",
+          "Rajmachi Point"
+        ],
+        "3": [
+          "Karla Caves",
+          "Bhaja Caves"
+        ],
+        "4": [
+          "Local chikki shopping",
+          "Sunset at Duke's Nose"
+        ]
+      }
+    },
+    "khandala": {
+      "plans": {
+        "1": [
+          "Arrival, Kune Falls"
+        ],
+        "2": [
+          "Bhor Ghat",
+          "Rajmachi Fort trek"
+        ],
+        "3": [
+          "Amrutanjan Point",
+          "Sunset views"
+        ],
+        "4": [
+          "Local sightseeing",
+          "Relaxation at resort"
+        ]
+      }
+    },
+    "mahabaleshwar": {
+      "plans": {
+        "1": [
+          "Arrival, Mapro Garden strawberry treats"
+        ],
+        "2": [
+          "Pratapgad Fort",
+          "Lingmala Waterfall"
+        ],
+        "3": [
+          "Venna Lake boating",
+          "Wilson Point sunrise"
+        ],
+        "4": [
+          "Local strawberry shopping",
+          "Panchgani visit"
+        ]
+      }
+    },
+    "panchgani": {
+      "plans": {
+        "1": [
+          "Arrival, Table Land exploration"
+        ],
+        "2": [
+          "Sydney Point",
+          "Parsi Point"
+        ],
+        "3": [
+          "Kamalgad Fort view",
+          "Devil's Kitchen"
+        ],
+        "4": [
+          "Local berry products shopping",
+          "Relaxation at resort"
+        ]
+      }
+    },
+    "alibaug": {
+      "plans": {
+        "1": [
+          "Arrival, Alibaug beach"
+        ],
+        "2": [
+          "Kolaba Fort visit during low tide",
+          "Kashid Beach"
+        ],
+        "3": [
+          "Murud-Janjira Fort boat trip",
+          "Nagaon Beach"
+        ],
+        "4": [
+          "Local seafood lunch",
+          "Beach relaxation"
+        ]
+      }
+    },
+    "daman": {
+      "plans": {
+        "1": [
+          "Arrival, Devka Beach"
+        ],
+        "2": [
+          "Fort of St. Jerome",
+          "Our Lady of Sea Church"
+        ],
+        "3": [
+          "Jampore Beach",
+          "Daman Ganga River"
+        ],
+        "4": [
+          "Local Portuguese cuisine",
+          "Shopping for liquor"
+        ]
+      }
+    },
+    "diu": {
+      "plans": {
+        "1": [
+          "Arrival, Nagoa Beach"
+        ],
+        "2": [
+          "Diu Fort",
+          "St. Paul's Church"
+        ],
+        "3": [
+          "Gangeshwar Temple",
+          "Vanakbara fishing village"
+        ],
+        "4": [
+          "Local seafood",
+          "Beach activities"
+        ]
+      }
+    },
+    "khajuraho": {
+      "plans": {
+        "1": [
+          "Arrival, Western Group temples evening light show"
+        ],
+        "2": [
+          "Khajuraho temples detailed exploration",
+          "Archaeological Museum"
+        ],
+        "3": [
+          "Eastern Group temples",
+          "Southern Group temples"
+        ],
+        "4": [
+          "Local craft shopping",
+          "Cultural dance performance"
+        ]
+      }
+    },
+    "orchha": {
+      "plans": {
+        "1": [
+          "Arrival, Orchha Fort complex"
+        ],
+        "2": [
+          "Jehangir Mahal",
+          "Raj Mahal"
+        ],
+        "3": [
+          "Ram Raja Temple",
+          "Chhatris by Betwa River"
+        ],
+        "4": [
+          "Local market",
+          "Riverside relaxation"
+        ]
+      }
+    },
+    "mandu": {
+      "plans": {
+        "1": [
+          "Arrival, Mandu Fort exploration"
+        ],
+        "2": [
+          "Jahaz Mahal",
+          "Hindola Mahal"
+        ],
+        "3": [
+          "Baz Bahadur's Palace",
+          "Rupmati's Pavilion"
+        ],
+        "4": [
+          "Local village visit",
+          "Shopping for handicrafts"
+        ]
+      }
+    },
+    "pachmarhi": {
+      "plans": {
+        "1": [
+          "Arrival, Priyadarshini Point sunset"
+        ],
+        "2": [
+          "Bee Falls",
+          "Jata Shankar Caves"
+        ],
+        "3": [
+          "Dhupgarh sunrise",
+          "Handi Khoh"
+        ],
+        "4": [
+          "Local tribal market",
+          "Nature walks"
+        ]
+      }
+    },
+    "chikhaldara": {
+      "plans": {
+        "1": [
+          "Arrival, Sunset Point"
+        ],
+        "2": [
+          "Gavilgad Fort",
+          "Melinagari Point"
+        ],
+        "3": [
+          "Kichakdara",
+          "Bhimgad Fort"
+        ],
+        "4": [
+          "Coffee plantation visit",
+          "Local market"
+        ]
+      }
+    },
+    "darjeeling": {
+      "plans": {
+        "1": [
+          "Arrival, Mall Road walk"
+        ],
+        "2": [
+          "Tiger Hill sunrise",
+          "Batasia Loop"
+        ],
+        "3": [
+          "Darjeeling Himalayan Railway toy train",
+          "Tea plantation tour"
+        ],
+        "4": [
+          "Peace Pagoda",
+          "Local tea shopping"
+        ]
+      }
+    },
+    "gangtok": {
+      "plans": {
+        "1": [
+          "Arrival, MG Marg evening walk"
+        ],
+        "2": [
+          "Tsomgo Lake day trip",
+          "Baba Mandir"
+        ],
+        "3": [
+          "Rumtek Monastery",
+          "Enchey Monastery"
+        ],
+        "4": [
+          "Ropeway ride",
+          "Local handicraft shopping"
+        ]
+      }
+    },
+    "shillong": {
+      "plans": {
+        "1": [
+          "Arrival, Ward's Lake"
+        ],
+        "2": [
+          "Elephant Falls",
+          "Shillong Peak"
+        ],
+        "3": [
+          "Don Bosco Museum",
+          "Cathedral of Mary Help of Christians"
+        ],
+        "4": [
+          "Local markets",
+          "Khasi food experience"
+        ]
+      }
+    },
+    "kohima": {
+      "plans": {
+        "1": [
+          "Arrival, WWII Cemetery"
+        ],
+        "2": [
+          "Kisama Heritage Village",
+          "State Museum"
+        ],
+        "3": [
+          "Dzukou Valley trek",
+          "Local Naga village visit"
+        ],
+        "4": [
+          "Local handicraft shopping",
+          "Naga cuisine tasting"
+        ]
+      }
+    },
+    "imphal": {
+      "plans": {
+        "1": [
+          "Arrival, Kangla Fort"
+        ],
+        "2": [
+          "Loktak Lake day trip",
+          "Keibul Lamjao National Park"
+        ],
+        "3": [
+          "INA Museum",
+          "Shree Govindajee Temple"
+        ],
+        "4": [
+          "Local market for handicrafts",
+          "Manipuri dance if available"
+        ]
+      }
+    },
+    "puri": {
+      "plans": {
+        "1": [
+          "Arrival, Jagannath Temple visit",
+          "Puri Beach"
+        ],
+        "2": [
+          "Konark Sun Temple day trip",
+          "Chandrabhaga Beach"
+        ],
+        "3": [
+          "Chilika Lake boat ride",
+          "Dolphin watching"
+        ],
+        "4": [
+          "Local handicraft shopping",
+          "Puri beach relaxation"
+        ]
+      }
+    },
+    "konark": {
+      "plans": {
+        "1": [
+          "Arrival, Konark Sun Temple exploration"
+        ],
+        "2": [
+          "Sun Temple Archaeological Museum",
+          "Ramachandi Temple"
+        ],
+        "3": [
+          "Chandrabhaga Beach",
+          "ASI Museum"
+        ],
+        "4": [
+          "Local stone carving workshops",
+          "Beach relaxation"
+        ]
+      }
+    },
+    "sundarbans": {
+      "plans": {
+        "1": [
+          "Arrival, boat cruise start"
+        ],
+        "2": [
+          "Morning safari for tiger spotting",
+          "Mangrove forest exploration"
+        ],
+        "3": [
+          "Bird watching",
+          "Crocodile spotting"
+        ],
+        "4": [
+          "Local village visit",
+          "Return cruise"
+        ]
+      }
+    },
+    "kalimpong": {
+      "plans": {
+        "1": [
+          "Arrival, Durpin Monastery"
+        ],
+        "2": [
+          "Deolo Hill",
+          "Flower nurseries"
+        ],
+        "3": [
+          "Tharpa Choling Monastery",
+          "Mangal Dham"
+        ],
+        "4": [
+          "Local cheese and handicraft shopping",
+          "Nature walks"
+        ]
+      }
+    },
+    "kurseong": {
+      "plans": {
+        "1": [
+          "Arrival, Eagle's Craig viewpoint"
+        ],
+        "2": [
+          "Tea garden walk",
+          "Netaji Subhas Chandra Bose Museum"
+        ],
+        "3": [
+          "Giddapahar",
+          "St. Mary's Hill"
+        ],
+        "4": [
+          "Local tea shopping",
+          "Toy train ride experience"
+        ]
+      }
+    },
+    "mirik": {
+      "plans": {
+        "1": [
+          "Arrival, Sumendu Lake boating"
+        ],
+        "2": [
+          "Tea garden exploration",
+          "Bokar Monastery"
+        ],
+        "3": [
+          "Rameetay Dara",
+          "Orange orchards"
+        ],
+        "4": [
+          "Local market",
+          "Lake side relaxation"
+        ]
+      }
+    },
+    "ravangla": {
+      "plans": {
+        "1": [
+          "Arrival, Buddha Park"
+        ],
+        "2": [
+          "Ralang Monastery",
+          "Ravangla market"
+        ],
+        "3": [
+          "Temi Tea Garden",
+          "Local viewpoints"
+        ],
+        "4": [
+          "Nature walks",
+          "Local handicraft shopping"
+        ]
+      }
+    },
+    "pelling": {
+      "plans": {
+        "1": [
+          "Arrival, Pemayangtse Monastery"
+        ],
+        "2": [
+          "Khecheopalri Lake",
+          "Sanga Choeling Monastery"
+        ],
+        "3": [
+          "Kanchenjunga waterfalls",
+          "Skywalk"
+        ],
+        "4": [
+          "Local market",
+          "Mountain views"
+        ]
+      }
+    },
+    "lachung": {
+      "plans": {
+        "1": [
+          "Arrival, local monastery visit"
+        ],
+        "2": [
+          "Yumthang Valley day trip",
+          "Hot springs"
+        ],
+        "3": [
+          "Seven Sisters Waterfall",
+          "Shingba Rhododendron Sanctuary"
+        ],
+        "4": [
+          "Local village interaction",
+          "Mountain views"
+        ]
+      }
+    },
+    "lachen": {
+      "plans": {
+        "1": [
+          "Arrival, local acclimatization"
+        ],
+        "2": [
+          "Gurudongmar Lake day trip",
+          "Chopta Valley"
+        ],
+        "3": [
+          "Thangu Valley",
+          "Local monastery"
+        ],
+        "4": [
+          "Nature walks",
+          "Return journey"
+        ]
+      }
+    },
+    "ziro": {
+      "plans": {
+        "1": [
+          "Arrival, local Apatani village"
+        ],
+        "2": [
+          "Talley Valley trek",
+          "Kile Pakho"
+        ],
+        "3": [
+          "Midey",
+          "Ziro Puto"
+        ],
+        "4": [
+          "Local market",
+          "Apatani cultural experience"
+        ]
+      }
+    },
+    "majuli": {
+      "plans": {
+        "1": [
+          "Arrival, ferry ride to island"
+        ],
+        "2": [
+          "Satras (Vaishnavite monasteries)",
+          "Local pottery making"
+        ],
+        "3": [
+          "Bird watching",
+          "Mishing tribal village"
+        ],
+        "4": [
+          "Local handicraft shopping",
+          "Sunset by Brahmaputra"
+        ]
+      }
+    },
+    "kaziranga": {
+      "plans": {
+        "1": [
+          "Arrival, Central Range safari"
+        ],
+        "2": [
+          "Western Range safari",
+          "Elephant safari (if available)"
+        ],
+        "3": [
+          "Eastern Range safari",
+          "Kaziranga National Orchid Park"
+        ],
+        "4": [
+          "Local tea garden visit",
+          "Cultural show"
+        ]
+      }
+    },
+    "manas": {
+      "plans": {
+        "1": [
+          "Arrival, national park entry"
+        ],
+        "2": [
+          "Morning jungle safari",
+          "River rafting on Manas River"
+        ],
+        "3": [
+          "Elephant safari",
+          "Bird watching"
+        ],
+        "4": [
+          "Local Bodo village visit",
+          "Return"
+        ]
+      }
+    },
+    "cherrapunji": {
+      "plans": {
+        "1": [
+          "Arrival, Nohkalikai Falls"
+        ],
+        "2": [
+          "Mawsmai Cave exploration",
+          "Seven Sisters Falls"
+        ],
+        "3": [
+          "Living Root Bridges trek",
+          "Mawkdok Dympep Valley"
+        ],
+        "4": [
+          "Local market",
+          "Rainfall experience"
+        ]
+      }
+    },
+    "mawlynnong": {
+      "plans": {
+        "1": [
+          "Arrival, Asia's cleanest village walk"
+        ],
+        "2": [
+          "Living Root Bridge trek",
+          "Sky View point"
+        ],
+        "3": [
+          "Local Khasi food experience",
+          "Village interaction"
+        ],
+        "4": [
+          "Bamboo handicraft shopping",
+          "Nature walks"
+        ]
       }
     }
   }
