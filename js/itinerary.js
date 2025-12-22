@@ -1,320 +1,717 @@
-!function(){
-'use strict';
-const C={
-    urls:{
-        cities:'https://cdn.jsdelivr.net/gh/yatrat/it@v3.5/data/citylist.json',
-        itineraries:'https://cdn.jsdelivr.net/gh/yatrat/it@v3.5/data/itinerary-data.json'
-    },
-    selectors:{
-        cityInput:'cityInput',cityList:'cityList',daysSelect:'daysSelect',
-        generateBtn:'generateBtn',results:'itineraryResults'
-    },
-    limits:{maxSuggestions:8,maxDays:4},
-    cache:{ttl:3e5} 
-};
+/* ============================================
+   YATRAT ITINERARY PLANNER v3.0
+   Permanent Tool for Travel Planning
+   Author: Yatrat
+   Last Updated: 2024
+============================================ */
 
-let S={
-    cities:[],itineraries:{},lastFetch:0,
-    elems:{},initialized:!1
-};
+(function() {
+    'use strict';
+    
+    // CONFIGURATION - Easy to modify
+    const CONFIG = {
+        // Data Sources
+        dataURLs: {
+            cities: 'https://cdn.jsdelivr.net/gh/yatrat/it@v3.6/data/citylist.json',
+            itineraries: 'https://cdn.jsdelivr.net/gh/yatrat/it@v3.6/data/itinerary-data.json'
+        },
+        
+        // DOM Elements
+        elements: {
+            cityInput: 'cityInput',
+            suggestionsBox: 'cityList',
+            daysSelect: 'daysSelect',
+            generateBtn: 'generateBtn',
+            resultsDiv: 'itineraryResults',
+            loadingIndicator: 'loadingIndicator'
+        },
+        
+        // Limits
+        limits: {
+            maxSuggestions: 8,
+            maxDays: 7,
+            minSearchChars: 2
+        },
+        
+        // Settings
+        settings: {
+            cacheDuration: 3600000, // 1 hour in milliseconds
+            debounceDelay: 300,
+            enableOffline: true,
+            enableAnalytics: false
+        },
+        
+        // Messages
+        messages: {
+            loading: 'Loading...',
+            generating: 'Creating Your Plan...',
+            noCity: 'Please enter a city name',
+            noDays: 'Please select number of days',
+            invalidDays: 'Please select 1-7 days',
+            noResults: 'No itinerary found for this city',
+            errorFetch: 'Unable to load data. Please check connection.',
+            tryAgain: 'Please try again',
+            offline: 'Working offline with cached data'
+        }
+    };
 
-const U={
-    el:id=>document.getElementById(id),
-    decode:txt=>{
-        if(!txt)return'';
-        const e=document.createElement('textarea');
-        return e.innerHTML=txt.replace(/&amp;/g,'&'),e.value;
-    },
-    debounce:(f,w)=>{
-        let t;return function(...a){
-            clearTimeout(t),t=setTimeout(()=>f(...a),w);
-        };
-    },
-    loading:(b,t='Loading...')=>{
-        if(b){
-            b.dataset.original=b.innerHTML;
-            b.innerHTML=`<span class="loading-spinner"></span> ${t}`;
-            b.disabled=!0;
-        }
-    },
-    loaded:(b,d='Generate Plan')=>{
-        if(b){
-            b.innerHTML=b.dataset.original||d;
-            b.disabled=!1;
-        }
-    },
-    msg:(c,t,type='error')=>{
-        if(!c)return;
-        c.innerHTML=`<div class="message message-${type}">${t}</div>`;
-    },
-    clearMsg:c=>{
-        const m=c?.querySelector('.message');
-        m&&m.remove();
-    }
-};
-
-const M={
-    init(){
-        try{
-            S.elems={
-                cityInput:U.el(C.selectors.cityInput),
-                cityList:U.el(C.selectors.cityList),
-                daysSelect:U.el(C.selectors.daysSelect),
-                generateBtn:U.el(C.selectors.generateBtn),
-                results:U.el(C.selectors.results)
-            };
-            
-            if(!this.validateElems())return;
-            
-            this.setupEvents();
-            
-            this.loadData();
-            
-            S.initialized=!0;
-            console.log('✓ Itinerary Tool Ready');
-            
-        }catch(e){
-            console.error('Init error:',e);
-            this.showError('Tool initialization failed');
-        }
-    },
-    
-    validateElems(){
-        const r=['cityInput','daysSelect','generateBtn','results'];
-        return r.every(k=>S.elems[k]);
-    },
-    
-    setupEvents(){
-        const I=S.elems.cityInput,L=S.elems.cityList,B=S.elems.generateBtn;
+    // STATE MANAGEMENT
+    const STATE = {
+        // Data
+        allCities: [],
+        allItineraries: {},
+        cachedData: null,
         
-        I.addEventListener('input',U.debounce(()=>this.handleInput(),300));
+        // UI State
+        currentCity: null,
+        currentDays: 1,
+        isGenerating: false,
+        isOffline: false,
         
-        B.addEventListener('click',()=>this.generate());
+        // DOM References
+        dom: {},
         
-        I.addEventListener('keypress',e=>{
-            if(e.key==='Enter')this.generate();
-        });
+        // Timestamps
+        lastUpdated: null,
+        lastFetch: 0,
         
-        document.addEventListener('click',e=>{
-            if(!L.contains(e.target)&&e.target!==I){
-                L.style.display='none';
-            }
-        });
-        
-        I.addEventListener('keydown',e=>{
-            if(e.key==='Escape')L.style.display='none';
-        });
-    },
-    
-    async loadData(){
-        try{
-            const[citiesRes,itinerariesRes]=await Promise.all([
-                this.fetchData(C.urls.cities),
-                this.fetchData(C.urls.itineraries)
-            ]);
-            
-            S.cities=citiesRes.cities||[];
-            S.itineraries=itinerariesRes.cities||{};
-            S.lastFetch=Date.now();
-            
-            console.log(`Loaded ${S.cities.length} cities, ${Object.keys(S.itineraries).length} itineraries`);
-            
-        }catch(e){
-            console.error('Data load error:',e);
-        }
-    },
-    
-    async fetchData(url){
-        if(Date.now()-S.lastFetch<C.cache.ttl){
-            const key=`cache_${btoa(url)}`;
-            const cached=sessionStorage.getItem(key);
-            if(cached){
-                try{return JSON.parse(cached);}
-                catch(e){/* Cache corrupt */}
-            }
-        }
-        
-        const res=await fetch(url);
-        if(!res.ok)throw new Error(`HTTP ${res.status}`);
-        
-        const data=await res.json();
-        
-        try{
-            sessionStorage.setItem(`cache_${btoa(url)}`,JSON.stringify(data));
-        }catch(e){}
-        return data;
-    },
-    
-    handleInput(){
-        const I=S.elems.cityInput,L=S.elems.cityList;
-        const term=I.value.trim().toLowerCase();
-        L.innerHTML='';
-        
-        if(!term||term.length<2){
-            L.style.display='none';
-            return;
-        }
-        
-        const matches=[];
-        const seen=new Set();
-        
-        S.cities.forEach(city=>{
-            const name=city.name.toLowerCase();
-            if(name.includes(term)&&!seen.has(name)){
-                seen.add(name);
-                matches.push(city);
-            }
-        });
-        
-        if(matches.length){
-            this.showSuggestions(matches.slice(0,C.limits.maxSuggestions));
-            L.style.display='block';
-        }else{
-            L.innerHTML='<div class="yt-suggestion">No cities found</div>';
-            L.style.display='block';
-        }
-    },
-    
-    showSuggestions(cities){
-        const L=S.elems.cityList;
-        L.innerHTML='';
-        
-        cities.forEach(city=>{
-            const div=document.createElement('div');
-            div.className='yt-suggestion';
-            div.innerHTML=`<span>${city.name}</span><small>${city.id}</small>`;
-            
-            div.addEventListener('click',()=>{
-                S.elems.cityInput.value=city.name;
-                S.elems.cityInput.dataset.cityId=city.id;
-                L.style.display='none';
+        // Initialize
+        init: function() {
+            this.dom = {};
+            Object.keys(CONFIG.elements).forEach(key => {
+                this.dom[key] = document.getElementById(CONFIG.elements[key]);
             });
+            return this.validateDOM();
+        },
+        
+        validateDOM: function() {
+            const required = ['cityInput', 'generateBtn', 'resultsDiv'];
+            return required.every(id => this.dom[id] !== null);
+        }
+    };
+
+    // CORE UTILITIES
+    const UTILS = {
+        // DOM Utilities
+        $: id => document.getElementById(id),
+        create: (tag, className) => {
+            const el = document.createElement(tag);
+            if (className) el.className = className;
+            return el;
+        },
+        show: (el, display = 'block') => el && (el.style.display = display),
+        hide: el => el && (el.style.display = 'none'),
+        
+        // Text Processing
+        sanitizeText: function(text) {
+            if (!text || typeof text !== 'string') return '';
             
-            L.appendChild(div);
-        });
-    },
-    
-    async generate(){
-        U.clearMsg(S.elems.results);
+            // Remove checkmarks and special symbols
+            text = text.replace(/[✓✔✗✘×☑✅❌❎]|&#1000[0-8];/g, '');
+            
+            // Decode HTML entities
+            const textarea = document.createElement('textarea');
+            textarea.innerHTML = text;
+            return textarea.value.trim();
+        },
         
-        const I=S.elems.cityInput,D=S.elems.daysSelect,R=S.elems.results;
-        const cityName=I.value.trim();
-        const cityId=I.dataset.cityId||cityName.toLowerCase();
-        const days=parseInt(D.value);
+        // Debouncing for search
+        debounce: function(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        },
         
+        // Loading States
+        setLoading: function(isLoading, button = STATE.dom.generateBtn) {
+            if (!button) return;
+            
+            if (isLoading) {
+                button.dataset.originalText = button.textContent;
+                button.innerHTML = `<span class="spinner"></span> ${CONFIG.messages.generating}`;
+                button.disabled = true;
+            } else {
+                button.textContent = button.dataset.originalText || 'Generate Itinerary';
+                button.disabled = false;
+            }
+        },
         
-        if(!cityName||!days){
-            U.msg(R,'Please select city and days','error');
-            return;
-        }
-        
-        if(days<1||days>C.limits.maxDays){
-            U.msg(R,`Please select 1-${C.limits.maxDays} days`,'error');
-            return;
-        }
-        
-        U.loading(S.elems.generateBtn);
-        
-        try{
-            if(Date.now()-S.lastFetch>C.cache.ttl){
-                await this.loadData();
+        // Messages and Alerts
+        showMessage: function(type, text, duration = 5000) {
+            const container = STATE.dom.resultsDiv;
+            if (!container) return;
+            
+            // Clear existing messages
+            this.clearMessage();
+            
+            // Create message element
+            const message = this.create('div', `alert alert-${type}`);
+            message.innerHTML = `
+                <div class="alert-content">
+                    <span class="alert-icon">${type === 'success' ? '✓' : '!'}</span>
+                    <span class="alert-text">${text}</span>
+                </div>
+            `;
+            
+            // Add to container
+            container.prepend(message);
+            
+            // Auto-remove if duration specified
+            if (duration > 0) {
+                setTimeout(() => message.remove(), duration);
             }
             
-            const cityData=S.itineraries[cityId];
-            if(!cityData){
-                throw new Error(`No itinerary for "${cityName}"`);
-            }
+            return message;
+        },
+        
+        clearMessage: function() {
+            const container = STATE.dom.resultsDiv;
+            if (!container) return;
             
-            const activities=[];
-            for(let day=1;day<=days;day++){
-                const plan=cityData.plans?.[day.toString()];
-                if(plan&&Array.isArray(plan)){
-                    plan.forEach(act=>{
-                        activities.push({
-                            day:day,
-                            activity:U.decode(act)
-                        });
+            const existing = container.querySelector('.alert');
+            if (existing) existing.remove();
+        },
+        
+        // Storage with fallback
+        storage: {
+            set: function(key, value) {
+                try {
+                    if (CONFIG.settings.enableOffline) {
+                        localStorage.setItem(`yatrat_${key}`, JSON.stringify({
+                            data: value,
+                            timestamp: Date.now()
+                        }));
+                    }
+                } catch (e) {
+                    console.warn('Storage full or not available');
+                }
+            },
+            
+            get: function(key, maxAge = CONFIG.settings.cacheDuration) {
+                try {
+                    if (!CONFIG.settings.enableOffline) return null;
+                    
+                    const item = localStorage.getItem(`yatrat_${key}`);
+                    if (!item) return null;
+                    
+                    const parsed = JSON.parse(item);
+                    const age = Date.now() - parsed.timestamp;
+                    
+                    if (age > maxAge) {
+                        this.remove(key);
+                        return null;
+                    }
+                    
+                    return parsed.data;
+                } catch (e) {
+                    return null;
+                }
+            },
+            
+            remove: function(key) {
+                try {
+                    localStorage.removeItem(`yatrat_${key}`);
+                } catch (e) {}
+            }
+        }
+    };
+
+    // DATA MANAGER
+    const DATA_MANAGER = {
+        // Load all required data
+        load: async function() {
+            try {
+                // Show loading state
+                UTILS.showMessage('info', 'Loading travel data...', 2000);
+                
+                // Try to get from cache first
+                const cached = UTILS.storage.get('itinerary_data');
+                if (cached && CONFIG.settings.enableOffline) {
+                    STATE.allCities = cached.cities || [];
+                    STATE.allItineraries = cached.itineraries || {};
+                    STATE.isOffline = true;
+                    STATE.lastUpdated = cached.timestamp;
+                    
+                    console.log('Using cached data');
+                    return true;
+                }
+                
+                // Fetch fresh data
+                const [citiesData, itinerariesData] = await Promise.all([
+                    this.fetchData(CONFIG.dataURLs.cities),
+                    this.fetchData(CONFIG.dataURLs.itineraries)
+                ]);
+                
+                // Process data
+                STATE.allCities = citiesData.cities || [];
+                STATE.allItineraries = itinerariesData.cities || {};
+                STATE.lastUpdated = Date.now();
+                STATE.isOffline = false;
+                
+                // Cache for offline use
+                UTILS.storage.set('itinerary_data', {
+                    cities: STATE.allCities,
+                    itineraries: STATE.allItineraries,
+                    timestamp: STATE.lastUpdated
+                });
+                
+                console.log(`✓ Loaded ${STATE.allCities.length} cities`);
+                return true;
+                
+            } catch (error) {
+                console.error('Data load error:', error);
+                
+                // Try to use any available cached data
+                const cached = UTILS.storage.get('itinerary_data', 86400000); // 24 hour max
+                if (cached) {
+                    STATE.allCities = cached.cities || [];
+                    STATE.allItineraries = cached.itineraries || {};
+                    STATE.isOffline = true;
+                    UTILS.showMessage('warning', CONFIG.messages.offline, 3000);
+                    return true;
+                }
+                
+                UTILS.showMessage('error', CONFIG.messages.errorFetch);
+                return false;
+            }
+        },
+        
+        // Fetch with retry logic
+        fetchData: async function(url, retries = 2) {
+            for (let i = 0; i <= retries; i++) {
+                try {
+                    const response = await fetch(url, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Cache-Control': 'max-age=3600'
+                        }
                     });
+                    
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    
+                    return await response.json();
+                } catch (error) {
+                    if (i === retries) throw error;
+                    await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+                }
+            }
+        },
+        
+        // Search cities with duplicate prevention
+        searchCities: function(searchTerm) {
+            if (!searchTerm || searchTerm.length < CONFIG.limits.minSearchChars) {
+                return [];
+            }
+            
+            const term = searchTerm.toLowerCase();
+            const results = [];
+            const seen = new Set();
+            
+            for (const city of STATE.allCities) {
+                if (seen.has(city.name)) continue;
+                
+                if (city.name.toLowerCase().includes(term) || 
+                    city.id.toLowerCase().includes(term)) {
+                    seen.add(city.name);
+                    results.push(city);
+                    
+                    if (results.length >= CONFIG.limits.maxSuggestions) {
+                        break;
+                    }
                 }
             }
             
-            if(activities.length===0){
-                throw new Error(`No ${days}-day plan available`);
+            return results;
+        },
+        
+        // Get itinerary for city
+        getItinerary: function(cityId, days) {
+            if (!STATE.allItineraries[cityId]) {
+                return null;
             }
             
+            const itinerary = [];
+            const cityData = STATE.allItineraries[cityId];
             
-            this.displayResult(cityName,days,activities);
+            for (let day = 1; day <= days; day++) {
+                const dayPlans = cityData.plans?.[day.toString()] || [];
+                dayPlans.forEach(activity => {
+                    itinerary.push({
+                        day: day,
+                        activity: UTILS.sanitizeText(activity)
+                    });
+                });
+            }
             
-        }catch(e){
-            console.error('Generate error:',e);
-            U.msg(R,'Failed to generate. Please try again.','error');
-        }finally{
-            U.loaded(S.elems.generateBtn);
+            return itinerary.length > 0 ? itinerary : null;
         }
-    },
-    
-    displayResult(cityName,days,activities){
-        const R=S.elems.results;
-        R.innerHTML='';
+    };
+
+    // UI MANAGER
+    const UI_MANAGER = {
+        // Initialize UI
+        init: function() {
+            this.setupEventListeners();
+            this.setupDaysDropdown();
+            this.checkOfflineStatus();
+        },
         
-        const header=document.createElement('div');
-        header.className='itinerary-header';
-        header.innerHTML=`
-            <h3>${days}-Day Itinerary for ${cityName}</h3>
-            <p>${activities.length} activities across ${days} days</p>
-        `;
-        R.appendChild(header);
+        // Setup event listeners
+        setupEventListeners: function() {
+            const { cityInput, suggestionsBox, generateBtn } = STATE.dom;
+            
+            if (!cityInput || !generateBtn) return;
+            
+            // City search with debounce
+            cityInput.addEventListener('input', UTILS.debounce(() => {
+                this.handleCitySearch();
+            }, CONFIG.settings.debounceDelay));
+            
+            // Generate button
+            generateBtn.addEventListener('click', () => this.generateItinerary());
+            
+            // Enter key support
+            cityInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') this.generateItinerary();
+            });
+            
+            // Click outside to close suggestions
+            document.addEventListener('click', (e) => {
+                if (!suggestionsBox.contains(e.target) && e.target !== cityInput) {
+                    UTILS.hide(suggestionsBox);
+                }
+            });
+            
+            // Escape key to close suggestions
+            cityInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') UTILS.hide(suggestionsBox);
+            });
+        },
         
-        const byDay={};
-        activities.forEach(item=>{
-            (byDay[item.day]||(byDay[item.day]=[])).push(item.activity);
-        });
+        // Setup days dropdown
+        setupDaysDropdown: function() {
+            const daysSelect = STATE.dom.daysSelect;
+            if (!daysSelect) return;
+            
+            daysSelect.innerHTML = '';
+            for (let i = 1; i <= CONFIG.limits.maxDays; i++) {
+                const option = UTILS.create('option');
+                option.value = i;
+                option.textContent = `${i} Day${i > 1 ? 's' : ''}`;
+                daysSelect.appendChild(option);
+            }
+            
+            daysSelect.value = 3; // Default to 3 days
+            STATE.currentDays = 3;
+            
+            // Update state when changed
+            daysSelect.addEventListener('change', (e) => {
+                STATE.currentDays = parseInt(e.target.value);
+            });
+        },
         
-        for(let day=1;day<=days;day++){
-            if(byDay[day]){
-                const card=document.createElement('div');
-                card.className='itinerary-day';
-                card.innerHTML=`
-                    <div class="day-header">
-                        <span class="day-number">Day ${day}</span>
-                        <span class="day-duration">${byDay[day].length} activities</span>
+        // Handle city search
+        handleCitySearch: function() {
+            const cityInput = STATE.dom.cityInput;
+            const suggestionsBox = STATE.dom.suggestionsBox;
+            
+            if (!cityInput || !suggestionsBox) return;
+            
+            const searchTerm = cityInput.value.trim();
+            
+            // Clear suggestions if search is too short
+            if (searchTerm.length < CONFIG.limits.minSearchChars) {
+                UTILS.hide(suggestionsBox);
+                return;
+            }
+            
+            // Search for cities
+            const results = DATA_MANAGER.searchCities(searchTerm);
+            
+            // Display results
+            if (results.length > 0) {
+                this.displaySuggestions(results);
+                UTILS.show(suggestionsBox);
+            } else {
+                suggestionsBox.innerHTML = '<div class="no-results">No cities found</div>';
+                UTILS.show(suggestionsBox);
+            }
+        },
+        
+        // Display city suggestions
+        displaySuggestions: function(cities) {
+            const suggestionsBox = STATE.dom.suggestionsBox;
+            if (!suggestionsBox) return;
+            
+            suggestionsBox.innerHTML = '';
+            
+            cities.forEach(city => {
+                const suggestion = UTILS.create('div', 'city-suggestion');
+                suggestion.innerHTML = `
+                    <div class="suggestion-content">
+                        <strong>${city.name}</strong>
+                        <small>${city.country || ''}</small>
                     </div>
-                    <ul class="day-activities">
-                        ${byDay[day].map(a=>`<li>${a}</li>`).join('')}
-                    </ul>
                 `;
-                R.appendChild(card);
+                
+                suggestion.addEventListener('click', () => {
+                    STATE.dom.cityInput.value = city.name;
+                    STATE.dom.cityInput.dataset.cityId = city.id;
+                    STATE.currentCity = city;
+                    UTILS.hide(suggestionsBox);
+                });
+                
+                suggestionsBox.appendChild(suggestion);
+            });
+        },
+        
+        // Generate itinerary
+        generateItinerary: async function() {
+            if (STATE.isGenerating) return;
+            
+            const cityInput = STATE.dom.cityInput;
+            const resultsDiv = STATE.dom.resultsDiv;
+            
+            if (!cityInput || !resultsDiv) return;
+            
+            // Get inputs
+            const cityName = cityInput.value.trim();
+            const cityId = cityInput.dataset.cityId || cityName.toLowerCase().replace(/\s+/g, '-');
+            const days = STATE.currentDays;
+            
+            // Validation
+            if (!cityName) {
+                UTILS.showMessage('error', CONFIG.messages.noCity);
+                return;
+            }
+            
+            if (!days || days < 1 || days > CONFIG.limits.maxDays) {
+                UTILS.showMessage('error', CONFIG.messages.invalidDays);
+                return;
+            }
+            
+            // Set generating state
+            STATE.isGenerating = true;
+            UTILS.setLoading(true);
+            UTILS.clearMessage();
+            
+            try {
+                // Get itinerary
+                const itinerary = DATA_MANAGER.getItinerary(cityId, days);
+                
+                if (!itinerary) {
+                    UTILS.showMessage('error', CONFIG.messages.noResults);
+                    return;
+                }
+                
+                // Display results
+                this.displayItinerary(cityName, days, itinerary);
+                
+                // Log success
+                if (CONFIG.settings.enableAnalytics) {
+                    console.log(`Generated ${days}-day itinerary for ${cityName}`);
+                }
+                
+            } catch (error) {
+                console.error('Generation error:', error);
+                UTILS.showMessage('error', `${CONFIG.messages.errorFetch}. ${CONFIG.messages.tryAgain}`);
+            } finally {
+                STATE.isGenerating = false;
+                UTILS.setLoading(false);
+            }
+        },
+        
+        // Display itinerary results
+        displayItinerary: function(cityName, days, itinerary) {
+            const resultsDiv = STATE.dom.resultsDiv;
+            if (!resultsDiv) return;
+            
+            // Group by day
+            const daysMap = {};
+            itinerary.forEach(item => {
+                if (!daysMap[item.day]) {
+                    daysMap[item.day] = [];
+                }
+                daysMap[item.day].push(item.activity);
+            });
+            
+            // Create HTML
+            let html = `
+                <div class="itinerary-header">
+                    <h2><span class="icon">✈️</span> ${days}-Day ${cityName} Itinerary</h2>
+                    <div class="header-info">
+                        <span class="days">${days} days</span>
+                        <span class="activities">${itinerary.length} activities</span>
+                        ${STATE.isOffline ? '<span class="offline-badge">Offline</span>' : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Add each day
+            for (let day = 1; day <= days; day++) {
+                const activities = daysMap[day] || [];
+                
+                html += `
+                    <div class="day-card">
+                        <div class="day-header">
+                            <h3>Day ${day}</h3>
+                            <span class="activity-count">${activities.length} activities</span>
+                        </div>
+                        
+                        ${activities.length > 0 ? `
+                            <div class="day-activities">
+                                <ol class="activity-list">
+                                    ${activities.map((activity, index) => `
+                                        <li class="activity-item">
+                                            <span class="activity-number">${index + 1}</span>
+                                            <span class="activity-text">${activity}</span>
+                                        </li>
+                                    `).join('')}
+                                </ol>
+                            </div>
+                        ` : `
+                            <div class="free-day">
+                                <p>Free day for exploration, shopping, or relaxation</p>
+                            </div>
+                        `}
+                    </div>
+                `;
+            }
+            
+            // Add footer
+            html += `
+                <div class="itinerary-footer">
+                    <div class="tips">
+                        <h4><span class="icon">💡</span> Travel Tips</h4>
+                        <ul>
+                            <li>Customize this itinerary based on your interests</li>
+                            <li>Check local COVID-19 guidelines before traveling</li>
+                            <li>Book accommodations in advance during peak seasons</li>
+                            ${days > Object.keys(daysMap).length ? 
+                                `<li>Use free days for spontaneous exploration</li>` : ''}
+                        </ul>
+                    </div>
+                    <div class="actions">
+                        <button class="btn-print" onclick="window.print()">
+                            <span class="icon">🖨️</span> Print Itinerary
+                        </button>
+                        <button class="btn-save" onclick="YATRAT_TOOL.saveItinerary()">
+                            <span class="icon">💾</span> Save
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = html;
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        },
+        
+        // Check offline status
+        checkOfflineStatus: function() {
+            STATE.isOffline = !navigator.onLine;
+            if (STATE.isOffline) {
+                UTILS.showMessage('info', 'Working in offline mode', 3000);
             }
         }
+    };
+
+    // MAIN APPLICATION
+    const YATRAT_ITINERARY_TOOL = {
+        // Initialize the tool
+        init: async function() {
+            console.log('🚀 Yatrat Itinerary Tool v3.0');
+            
+            // Initialize state
+            if (!STATE.init()) {
+                console.error('Required DOM elements not found');
+                return;
+            }
+            
+            // Setup UI
+            UI_MANAGER.init();
+            
+            // Load data
+            await DATA_MANAGER.load();
+            
+            // Set up offline detection
+            window.addEventListener('online', () => {
+                STATE.isOffline = false;
+                UTILS.showMessage('success', 'Back online!', 2000);
+            });
+            
+            window.addEventListener('offline', () => {
+                STATE.isOffline = true;
+                UTILS.showMessage('warning', 'Working offline', 3000);
+            });
+            
+            console.log('✓ Tool initialized successfully');
+        },
         
-        const daysWithData=Object.keys(byDay).length;
-        if(days>daysWithData){
-            const footer=document.createElement('div');
-            footer.className='itinerary-footer';
-            footer.innerHTML=`
-                <p><strong>Tip:</strong> Use remaining ${days-daysWithData} day(s) for free exploration.</p>
-            `;
-            R.appendChild(footer);
+        // Public API Methods
+        generate: function(cityName, days = 3) {
+            if (!cityName) return false;
+            
+            STATE.dom.cityInput.value = cityName;
+            STATE.dom.daysSelect.value = days;
+            STATE.currentDays = days;
+            
+            return UI_MANAGER.generateItinerary();
+        },
+        
+        refreshData: async function() {
+            UTILS.storage.remove('itinerary_data');
+            return await DATA_MANAGER.load();
+        },
+        
+        getStats: function() {
+            return {
+                cities: STATE.allCities.length,
+                itineraries: Object.keys(STATE.allItineraries).length,
+                lastUpdated: STATE.lastUpdated,
+                isOffline: STATE.isOffline
+            };
+        },
+        
+        saveItinerary: function() {
+            const resultsDiv = STATE.dom.resultsDiv;
+            if (!resultsDiv) return;
+            
+            const itineraryText = resultsDiv.textContent;
+            const blob = new Blob([itineraryText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `itinerary-${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            UTILS.showMessage('success', 'Itinerary saved!', 2000);
+        },
+        
+        clearCache: function() {
+            UTILS.storage.remove('itinerary_data');
+            UTILS.showMessage('success', 'Cache cleared', 2000);
         }
-        
-        R.scrollIntoView({behavior:'smooth',block:'start'});
-    },
-    
-    showError(msg){
-        U.msg(S.elems.results,msg,'error');
+    };
+
+    // GLOBAL EXPORT
+    window.YATRAT_TOOL = YATRAT_ITINERARY_TOOL;
+
+    // AUTO-INITIALIZE
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            YATRAT_ITINERARY_TOOL.init();
+        });
+    } else {
+        YATRAT_ITINERARY_TOOL.init();
     }
-};
 
-if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',()=>M.init());
-}else{
-    M.init();
-}
-
-
-window.YatratItinerary={
-    refresh:()=>M.loadData(),
-    version:'2.0'
-};
-
-}();
+})();
