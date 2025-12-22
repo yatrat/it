@@ -1,9 +1,11 @@
-
 async function setupAutocomplete() {
   const input = document.getElementById("cityInput");
   const list = document.getElementById("cityList");
 
-  if (!input || !list) return;
+  if (!input || !list) {
+    console.error("Autocomplete elements missing");
+    return;
+  }
 
   let cities = [];
 
@@ -20,10 +22,13 @@ async function setupAutocomplete() {
 
   input.addEventListener("input", () => {
     const value = input.value.trim().toLowerCase();
+
     list.innerHTML = "";
     list.style.display = "none";
+    input.dataset.cityId = ""; // reset selection
 
-    if (!value) return;
+    // 🔑 MIN LENGTH = 2 (FIX)
+    if (value.length < 2) return;
 
     const matches = cities.filter(city =>
       city.name.toLowerCase().includes(value)
@@ -38,7 +43,7 @@ async function setupAutocomplete() {
 
       item.addEventListener("click", () => {
         input.value = city.name;
-        input.dataset.cityId = city.id; // 🔑 source of truth
+        input.dataset.cityId = city.id;
         list.innerHTML = "";
         list.style.display = "none";
       });
@@ -46,7 +51,7 @@ async function setupAutocomplete() {
       list.appendChild(item);
     });
 
-    list.style.display = "block";
+    list.style.display = "block"; // THIS WAS MISSING
   });
 
   document.addEventListener("click", (e) => {
