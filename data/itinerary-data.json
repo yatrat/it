@@ -57,8 +57,9 @@
     "saputara": { "hotel": 2600, "food": 330, "direct_transport": ["train","own_vehicle"], "hub_city": "nasik", "hub_transport": ["bus","own_vehicle"] },
     "diu": { "hotel": 2900, "food": 360, "direct_transport": ["train","own_vehicle"], "hub_city": "veraval", "hub_transport": ["bus","own_vehicle"] },
     "velankanni": { "hotel": 2700, "food": 340, "direct_transport": ["train","own_vehicle"], "hub_city": "nagapattinam", "hub_transport": ["bus","own_vehicle"] },
-    "cherrapunji": { "hotel": 3100, "food": 390, "direct_transport": ["train","own_vehicle"], "hub_city": "shillong", "hub_transport": ["bus","own_vehicle"] }
-  },
+    "cherrapunji": { "hotel": 3100, "food": 390, "direct_transport": ["train","own_vehicle"], "hub_city": "shillong", "hub_transport": ["bus","own_vehicle"] },
+    "coorg": { "hotel": 2800, "food": 250, "direct_transport": ["flight","train","own_vehicle"],"hub_city": "bangalore","hub_transport": ["bus","own_vehicle"] }
+},
 
   "bus_prices": {
     "mathura-vrindavan": [50, 100],
@@ -97,6 +98,7 @@
     "nasik-saputara": [300, 500],
     "veraval-diu": [300, 500],
     "nagapattinam-velankanni": [50, 100],
-    "shillong-cherrapunji": [150, 250]
+    "shillong-cherrapunji": [150, 250],
+    "bangalore-coorg":[600,900]
   }
 }
