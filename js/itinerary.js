@@ -1,207 +1,113 @@
-async function setupAutocomplete() {
-  const input = document.getElementById("cityInput");
-  const list = document.getElementById("cityList");
+let data = null;
 
-  if (!input || !list) {
-    console.error("Autocomplete elements missing");
-    return;
-  }
+const DATA_URL = "https://cdn.jsdelivr.net/gh/yatrat/it@v4.1/data/itinerary-data.json";
 
-  let cities = [];
+fetch(DATA_URL)
+  .then(r => r.json())
+  .then(j => {
+    data = j;
+    initAutocomplete(Object.keys(data.cities));
+  })
+  .catch(err => {
+    console.error("Failed to load JSON", err);
+    alert("Data failed to load");
+  });
 
-  try {
-    const res = await fetch(
-      "https://cdn.jsdelivr.net/gh/yatrat/it@v4/data/citylist.json"
-    );
-    const json = await res.json();
-    cities = json.cities || [];
-  } catch (e) {
-    console.error("City list load failed", e);
-    return;
-  }
+const startCity = document.getElementById("startCity");
+const destInput = document.getElementById("destInput");
+const destSug = document.getElementById("destSug");
+const daysInput = document.getElementById("daysInput");
+const peopleInput = document.getElementById("peopleInput");
+const result = document.getElementById("result");
+const calcBtn = document.getElementById("calcBtn");
 
-  input.addEventListener("input", () => {
-    const value = input.value.trim().toLowerCase();
+calcBtn.onclick = calculate;
 
-    list.innerHTML = "";
-    list.style.display = "none";
-    input.dataset.cityId = ""; // reset selection
+function initAutocomplete(list) {
+  destInput.addEventListener("input", () => {
+    const q = destInput.value.toLowerCase();
+    destSug.innerHTML = "";
+    if (!q) return destSug.style.display = "none";
 
-    // 🔑 MIN LENGTH = 2 (FIX)
-    if (value.length < 2) return;
+    const matches = list.filter(c => c.startsWith(q)).slice(0, 10);
 
-    const matches = cities.filter(city =>
-      city.name.toLowerCase().includes(value)
-    );
-
-    if (!matches.length) return;
-
-    matches.slice(0, 10).forEach(city => {
-      const item = document.createElement("div");
-      item.className = "yt-suggestion";
-      item.textContent = city.name;
-
-      item.addEventListener("click", () => {
-        input.value = city.name;
-        input.dataset.cityId = city.id;
-        list.innerHTML = "";
-        list.style.display = "none";
-      });
-
-      list.appendChild(item);
+    matches.forEach(c => {
+      const d = document.createElement("div");
+      d.textContent = c.replace(/_/g, " ");
+      d.onclick = () => {
+        destInput.value = d.textContent;
+        destSug.style.display = "none";
+      };
+      destSug.appendChild(d);
     });
 
-    list.style.display = "block"; // THIS WAS MISSING
+    destSug.style.display = matches.length ? "block" : "none";
   });
 
-  document.addEventListener("click", (e) => {
-    if (!list.contains(e.target) && e.target !== input) {
-      list.innerHTML = "";
-      list.style.display = "none";
+  document.addEventListener("click", e => {
+    if (!destSug.contains(e.target) && e.target !== destInput) {
+      destSug.style.display = "none";
     }
   });
 }
 
-/* -------- ITINERARY DATA -------- */
-let itineraryCache = null;
+function calculate() {
+  if (!data) return alert("Data still loading...");
 
-async function loadItineraryData() {
-  if (itineraryCache) return itineraryCache;
+  const start = startCity.value;
+  const destKey = destInput.value.toLowerCase().replace(/\s+/g, "_");
+  const days = Number(daysInput.value);
+  const people = Number(peopleInput.value);
 
-  const res = await fetch(
-    "https://cdn.jsdelivr.net/gh/yatrat/it@v4/data/itinerary-data.json"
-  );
+  if (!start) return alert("Select start city");
+  if (!data.cities[destKey]) return alert("Select valid destination");
+  if (!Number.isInteger(days) || days < 1 || days > 30) return alert("Days must be 1–30");
+  if (!Number.isInteger(people) || people < 1 || people > 10) return alert("People must be 1–10");
 
-  if (!res.ok) {
-    throw new Error("Failed to load itinerary data");
-  }
-
-  itineraryCache = await res.json();
-  return itineraryCache;
+  renderResult(start, destKey, days, people);
 }
 
-/* ===============================
-   GENERATE ITINERARY
-================================ */
+function renderResult(start, dest, days, people) {
+  const c = data.cities[dest];
+  let html = `<h3>${dest.replace(/_/g," ")}</h3>`;
 
-async function generateItinerary() {
-  const cityInput = document.getElementById("cityInput");
-  const daysSelect = document.getElementById("daysSelect");
-  const results = document.getElementById("itineraryResults");
+  const hotelCost = c.hotel * days;
+  const foodCost = c.food * days * people;
 
-  const cityId = cityInput.dataset.cityId;
-  const days = parseInt(daysSelect.value, 10);
+  let minTotal = hotelCost + foodCost;
+  let maxTotal = hotelCost + foodCost;
 
-  if (!cityId || !days) {
-    results.innerHTML = `
-      <div class="message error">
-        Please select a city from suggestions and number of days.
-      </div>`;
-    return;
+  html += `<p>🏨 Hotel: ₹${hotelCost}</p>`;
+  html += `<p>🍽 Food: ₹${foodCost}</p>`;
+
+  html += `<h4>Transport</h4>`;
+
+  c.direct_transport.forEach(t => {
+    if (t === "own_vehicle") {
+      html += `<div>🚗 Own Vehicle — <a href="/p/fuel-calculator.html">Fuel Calculator</a></div>`;
+    } else {
+      html += `<div>${t} — Check official site</div>`;
+    }
+  });
+
+  if (c.hub_city) {
+    const key = `${c.hub_city}-${dest}`;
+    const price = data.bus_prices?.[key];
+    if (price && price.length === 2) {
+      const minBus = price[0] * people;
+      const maxBus = price[1] * people;
+
+      html += `<div>🚌 Bus via ${c.hub_city}: ₹${minBus}–₹${maxBus}</div>`;
+
+      minTotal += minBus;
+      maxTotal += maxBus;
+    } else {
+      html += `<div>🚌 Bus via ${c.hub_city}: price unavailable</div>`;
+    }
   }
 
-  try {
-    const data = await loadItineraryData();
-    const city = data.cities[cityId];
+  html += `<h4>Estimated Total: ₹${minTotal} – ₹${maxTotal}</h4>`;
+  html += `<p class="disclaimer">*Prices are approximate and may vary. Always check official transport and hotel sites before booking.</p>`;
 
-    if (!city || !city.plans) {
-      results.innerHTML = `
-        <div class="message error">
-          Itinerary not available for selected city.
-        </div>`;
-      return;
-    }
-
-    results.innerHTML = "";
-
-    const availableDays = Object.keys(city.plans).length;
-    const daysToShow = Math.min(days, availableDays);
-
-    /* ---- SHOW DAY 1 → N ---- */
-    for (let d = 1; d <= daysToShow; d++) {
-      const activities = city.plans[d];
-      if (!activities) continue;
-
-      const day = document.createElement("div");
-      day.className = "itinerary-day";
-
-      // Header
-      const header = document.createElement("div");
-      header.className = "day-header";
-
-      const dayNum = document.createElement("span");
-      dayNum.className = "day-number";
-      dayNum.textContent = `Day ${d}`;
-
-      const duration = document.createElement("span");
-      duration.className = "day-duration";
-      duration.textContent = `${days} Day Trip`;
-
-      header.appendChild(dayNum);
-      header.appendChild(duration);
-
-      // Activities
-      const ul = document.createElement("ul");
-      ul.className = "day-activities";
-
-      activities.forEach(activity => {
-        const li = document.createElement("li");
-        li.textContent = activity;
-        ul.appendChild(li);
-      });
-
-      day.appendChild(header);
-      day.appendChild(ul);
-      results.appendChild(day);
-    }
-
-    /* ---- EXTRA DAYS FOOTER ---- */
-    const missingDays = days - availableDays;
-    if (missingDays > 0) {
-      addTipsFooter(missingDays);
-    }
-
-  } catch (err) {
-    console.error(err);
-    results.innerHTML = `
-      <div class="message error">
-        Error loading itinerary. Please try again.
-      </div>`;
-  }
+  result.innerHTML = html;
 }
-
-/* ===============================
-   EXTRA DAYS FOOTER
-================================ */
-
-function addTipsFooter(missingDays) {
-  const results = document.getElementById("itineraryResults");
-
-  const footer = document.createElement("div");
-  footer.className = "itinerary-footer";
-
-  footer.innerHTML = `
-    <p><strong>Travel Tips:</strong> Use the remaining ${missingDays} day(s) for:</p>
-    <ul>
-      <li>Free exploration of local markets</li>
-      <li>Relaxation and rest</li>
-      <li>Spontaneous discoveries</li>
-      <li>Travel buffer time</li>
-    </ul>
-  `;
-
-  results.appendChild(footer);
-}
-
-/* ===============================
-   INIT
-================================ */
-
-document.addEventListener("DOMContentLoaded", () => {
-  setupAutocomplete();
-
-  const btn = document.getElementById("generateBtn");
-  if (btn) {
-    btn.addEventListener("click", generateItinerary);
-  }
-});
