@@ -1,6 +1,6 @@
 let data = null;
 
-const DATA_URL = "https://cdn.jsdelivr.net/gh/yatrat/it@v4.1/data/itinerary-data.json";
+const DATA_URL = "https://cdn.jsdelivr.net/gh/yatrat/it@v4.2/data/itinerary-data.json";
 
 fetch(DATA_URL)
   .then(r => r.json())
@@ -21,7 +21,17 @@ const peopleInput = document.getElementById("peopleInput");
 const result = document.getElementById("result");
 const calcBtn = document.getElementById("calcBtn");
 
+const directTransport = document.getElementById("directTransport");
+const hubTransport = document.getElementById("hubTransport");
+const hubSection = document.getElementById("hubSection");
+const hubCity = document.getElementById("hubCity");
+
 calcBtn.onclick = calculate;
+
+function makeRange(value, percent = 10) {
+  const delta = Math.round(value * percent / 100);
+  return [value - delta, value + delta];
+}
 
 function initAutocomplete(list) {
   destInput.addEventListener("input", () => {
@@ -37,6 +47,7 @@ function initAutocomplete(list) {
       d.onclick = () => {
         destInput.value = d.textContent;
         destSug.style.display = "none";
+        onDestinationSelected(c);
       };
       destSug.appendChild(d);
     });
@@ -69,45 +80,65 @@ function calculate() {
 
 function renderResult(start, dest, days, people) {
   const c = data.cities[dest];
+
+  const [hotelMin, hotelMax] = makeRange(c.hotel * days);
+  const [foodMin, foodMax] = makeRange(c.food * days * people);
+
+  let minTotal = hotelMin + foodMin;
+  let maxTotal = hotelMax + foodMax;
+
   let html = `<h3>${dest.replace(/_/g," ")}</h3>`;
+  html += `<p>🏨 Hotel: ₹${hotelMin} – ₹${hotelMax}</p>`;
+  html += `<p>🍽 Food: ₹${foodMin} – ₹${foodMax}</p>`;
 
-  const hotelCost = c.hotel * days;
-  const foodCost = c.food * days * people;
+  const dt = directTransport.value;
+  if (dt === "own_vehicle") {
+    html += `<p>🚗 Own Vehicle — <a href="/p/fuel-calculator.html">Fuel Calculator</a></p>`;
+  } else {
+    html += `<p>${dt} — Check official site</p>`;
+  }
 
-  let minTotal = hotelCost + foodCost;
-  let maxTotal = hotelCost + foodCost;
+  if (c.hub_city && hubTransport.value === "bus") {
+    const price = data.bus_prices[`${c.hub_city}-${dest}`];
+    if (price) {
+      const busMin = price[0] * people;
+      const busMax = price[1] * people;
 
-  html += `<p>🏨 Hotel: ₹${hotelCost}</p>`;
-  html += `<p>🍽 Food: ₹${foodCost}</p>`;
-
-  html += `<h4>Transport</h4>`;
-
-  c.direct_transport.forEach(t => {
-    if (t === "own_vehicle") {
-      html += `<div>🚗 Own Vehicle — <a href="/p/fuel-calculator.html">Fuel Calculator</a></div>`;
-    } else {
-      html += `<div>${t} — Check official site</div>`;
-    }
-  });
-
-  if (c.hub_city) {
-    const key = `${c.hub_city}-${dest}`;
-    const price = data.bus_prices?.[key];
-    if (price && price.length === 2) {
-      const minBus = price[0] * people;
-      const maxBus = price[1] * people;
-
-      html += `<div>🚌 Bus via ${c.hub_city}: ₹${minBus}–₹${maxBus}</div>`;
-
-      minTotal += minBus;
-      maxTotal += maxBus;
-    } else {
-      html += `<div>🚌 Bus via ${c.hub_city}: price unavailable</div>`;
+      html += `<p>🚌 Bus via ${c.hub_city}: ₹${busMin} – ₹${busMax}</p>`;
+      minTotal += busMin;
+      maxTotal += busMax;
     }
   }
 
-  html += `<h4>Estimated Total: ₹${minTotal} – ₹${maxTotal}</h4>`;
-  html += `<p class="disclaimer">*Prices are approximate and may vary. Always check official transport and hotel sites before booking.</p>`;
+  html += `<h4>Total: ₹${minTotal} – ₹${maxTotal}</h4>`;
+  html += `<p class="disclaimer">*All Prices are approximate and may vary. Always check official transport and hotel sites before booking.</p>`;
 
   result.innerHTML = html;
+}
+
+function onDestinationSelected(destKey) {
+  const c = data.cities[destKey];
+
+  directTransport.innerHTML = "";
+  c.direct_transport.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    directTransport.appendChild(opt);
+  });
+
+  if (c.hub_city) {
+    hubSection.style.display = "block";
+    hubCity.value = c.hub_city;
+
+    hubTransport.innerHTML = "";
+    c.hub_transport.forEach(t => {
+      const opt = document.createElement("option");
+      opt.value = t;
+      opt.textContent = t;
+      hubTransport.appendChild(opt);
+    });
+  } else {
+    hubSection.style.display = "none";
+  }
 }
