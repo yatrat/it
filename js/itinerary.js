@@ -1,6 +1,6 @@
 let data = null;
 
-const DATA_URL = "https://cdn.jsdelivr.net/gh/yatrat/it@v4.3/data/itinerary-data.json";
+const DATA_URL = "https://cdn.jsdelivr.net/gh/yatrat/it@v4.4/data/itinerary-data.json";
 
 fetch(DATA_URL)
   .then(r => r.json())
@@ -116,6 +116,8 @@ function renderResult(start, dest, days, people) {
   html += `<p class="disclaimer">* All prices are approximate and may vary based on season, availability, and booking time.</p>`;
 
   result.innerHTML = html;
+  result.style.display = "block";
+
 }
 
 
