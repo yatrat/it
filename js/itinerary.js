@@ -1,6 +1,6 @@
 let data = null;
 
-const DATA_URL = "https://cdn.jsdelivr.net/gh/yatrat/it@v4.2/data/itinerary-data.json";
+const DATA_URL = "https://cdn.jsdelivr.net/gh/yatrat/it@v4.3/data/itinerary-data.json";
 
 fetch(DATA_URL)
   .then(r => r.json())
@@ -88,14 +88,15 @@ function renderResult(start, dest, days, people) {
   let maxTotal = hotelMax + foodMax;
 
   let html = `<h3>${dest.replace(/_/g," ")}</h3>`;
-  html += `<p>🏨 Hotel: ₹${hotelMin} – ₹${hotelMax}</p>`;
-  html += `<p>🍽 Food: ₹${foodMin} – ₹${foodMax}</p>`;
+
+  html += `<p>🏨 Hotel cost: ₹${hotelMin}–₹${hotelMax} for ${days} days</p>`;
+  html += `<p>🍽 Food cost: ₹${foodMin}–₹${foodMax} for ${people} people for ${days} days</p>`;
 
   const dt = directTransport.value;
   if (dt === "own_vehicle") {
-    html += `<p>🚗 Own Vehicle — <a href="/p/fuel-calculator.html">Fuel Calculator</a></p>`;
+    html += `<p>🚗 Travel: Own vehicle — <a href="/p/fuel-calculator.html">use fuel calculator</a></p>`;
   } else {
-    html += `<p>${dt} — Check official site</p>`;
+    html += `<p>✈️ Travel: ${dt} — check official site</p>`;
   }
 
   if (c.hub_city && hubTransport.value === "bus") {
@@ -104,17 +105,19 @@ function renderResult(start, dest, days, people) {
       const busMin = price[0] * people;
       const busMax = price[1] * people;
 
-      html += `<p>🚌 Bus via ${c.hub_city}: ₹${busMin} – ₹${busMax}</p>`;
+      html += `<p>🚌 Bus via ${c.hub_city}: ₹${busMin}–₹${busMax} for ${people} people</p>`;
       minTotal += busMin;
       maxTotal += busMax;
     }
   }
 
-  html += `<h4>Total: ₹${minTotal} – ₹${maxTotal}</h4>`;
-  html += `<p class="disclaimer">*All Prices are approximate and may vary. Always check official transport and hotel sites before booking.</p>`;
+  html += `<hr>`;
+  html += `<p><strong>Total rough estimate for ${people} people for ${days} days trip:</strong> ₹${minTotal}–₹${maxTotal}</p>`;
+  html += `<p class="disclaimer">* All prices are approximate and may vary based on season, availability, and booking time.</p>`;
 
   result.innerHTML = html;
 }
+
 
 function onDestinationSelected(destKey) {
   const c = data.cities[destKey];
