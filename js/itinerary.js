@@ -1,6 +1,6 @@
 let data = null;
 
-const DATA_URL = "https://cdn.jsdelivr.net/gh/yatrat/it@v4.4/data/itinerary-data.json";
+const DATA_URL = "https://cdn.jsdelivr.net/gh/yatrat/it@v1.1.0/data/itinerary-data.json";
 
 fetch(DATA_URL)
   .then(r => r.json())
